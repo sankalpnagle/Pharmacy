@@ -1,0 +1,6 @@
+name,description,price,categoryId,subCategory,availability,requiresPrescription,details,medicineCode,weight
+Paracetamol 500mg,Effective pain relief and fever reducer,5.99,cat-123,sub-456,IN_STOCK,false,Take 1-2 tablets every 4-6 hours as needed,MED001,10
+Ibuprofen 200mg,Anti-inflammatory and pain relief,7.99,cat-123,sub-456,IN_STOCK,false,Take 1 tablet every 6-8 hours with food,MED002,10
+Amoxicillin 500mg,Antibiotic for bacterial infections,12.99,cat-123,sub-789,IN_STOCK,true,Take 1 capsule every 8 hours for 7 days,MED003,10
+Vitamin C 1000mg,Dietary supplement for immune support,8.99,cat-456,sub-123,IN_STOCK,false,Take 1 tablet daily with food,MED004,10
+Omeprazole 20mg,Acid reducer for heartburn relief,9.99,cat-456,sub-789,IN_STOCK,false,Take 1 capsule daily before breakfast,MED005,10

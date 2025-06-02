@@ -1,0 +1,3 @@
+name,description,price,categoryId,subCategory,availability,requiresPrescription,details,medicineCode,weight
+Paracetamol 500mg,Pain reliever and fever reducer,10.99,f6684de7-7545-4c45-ad2c-a20389cfe1fc,b2f5091e-943c-40b8-9d47-628a10b31313,IN_STOCK,FALSE,Take 1-2 tablets every 4-6 hours as needed,MED001,12
+Ibuprofen 200mg,Anti-inflammatory and pain reliever,15.99,f6684de7-7545-4c45-ad2c-a20389cfe1fc,b2f5091e-943c-40b8-9d47-628a10b31313,IN_STOCK,FALSE,Take 1 tablet every 6-8 hours as needed,MED002 ,15

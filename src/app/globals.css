@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #10847e;
+  --color-dangerous: #f62626;
+  --color-primary-light: #10847e80;
+  --shadow-primary: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+}
+
+* {
+  scrollbar-width: none;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+body {
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+}
