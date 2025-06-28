@@ -15,6 +15,37 @@ import { LuEye, LuEyeClosed } from "react-icons/lu";
 import ReCAPTCHA from "react-google-recaptcha";
 import { t } from "@/utils/translate";
 
+// Add styles for mobile-friendly reCAPTCHA
+const recaptchaStyles = `
+  .g-recaptcha {
+    transform: scale(1);
+    transform-origin: 0 0;
+  }
+  
+  @media (max-width: 768px) {
+    .g-recaptcha {
+      transform: scale(1.1);
+      transform-origin: 0 0;
+    }
+    
+    .g-recaptcha iframe {
+      width: 100% !important;
+      height: auto !important;
+      min-height: 78px !important;
+    }
+    
+    .g-recaptcha > div {
+      width: 100% !important;
+      height: auto !important;
+    }
+  }
+  
+  /* Ensure touch-friendly interaction */
+  .g-recaptcha * {
+    touch-action: manipulation;
+  }
+`;
+
 // Define base form data type (without confirmPassword for backend)
 type BaseFormData = {
   name: string;
@@ -158,6 +189,9 @@ const SignUpModal = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 px-4 ">
+      {/* Add mobile-friendly reCAPTCHA styles */}
+      <style dangerouslySetInnerHTML={{ __html: recaptchaStyles }} />
+
       {/* User / Doctor Toggle Buttons */}
       <div className="flex gap-x-2">
         <Button
@@ -330,12 +364,12 @@ const SignUpModal = () => {
               </label>
               <Input
                 type="text"
-                {...register("licenseNumber" as keyof DoctorFormData)}
+                {...register("licenseNumber" as any)}
                 placeholder={t("enter_your_license_number")}
               />
-              {errors.licenseNumber && (
+              {(errors as any).licenseNumber && (
                 <p className="text-red-500 text-sm">
-                  {errors.licenseNumber.message}
+                  {(errors as any).licenseNumber.message}
                 </p>
               )}
             </div>
@@ -445,12 +479,12 @@ const SignUpModal = () => {
               <label className="block text-sm">{t("speciality")}</label>
               <Input
                 type="text"
-                {...register("speciality" as keyof DoctorFormData)}
+                {...register("speciality" as any)}
                 placeholder={t("enter_your_speciality")}
               />
-              {errors.speciality && (
+              {(errors as any).speciality && (
                 <p className="text-red-500 text-sm">
-                  {errors.speciality.message}
+                  {(errors as any).speciality.message}
                 </p>
               )}
             </div>
@@ -459,11 +493,13 @@ const SignUpModal = () => {
               <label className="block text-sm">{t("group")}</label>
               <Input
                 type="text"
-                {...register("group" as keyof DoctorFormData)}
+                {...register("group" as any)}
                 placeholder={t("enter_your_group")}
               />
-              {errors.group && (
-                <p className="text-red-500 text-sm">{errors.group.message}</p>
+              {(errors as any).group && (
+                <p className="text-red-500 text-sm">
+                  {(errors as any).group.message}
+                </p>
               )}
             </div>
           </div>
@@ -472,12 +508,12 @@ const SignUpModal = () => {
             <label className="block text-sm">{t("organisation_name")}</label>
             <Input
               type="text"
-              {...register("organisationName" as keyof DoctorFormData)}
+              {...register("organisationName" as any)}
               placeholder={t("enter_your_organisation_name")}
             />
-            {errors.organisationName && (
+            {(errors as any).organisationName && (
               <p className="text-red-500 text-sm">
-                {errors.organisationName.message}
+                {(errors as any).organisationName.message}
               </p>
             )}
           </div>
@@ -486,11 +522,18 @@ const SignUpModal = () => {
 
       {/* Add reCAPTCHA before the submit button */}
       <div className="flex justify-center my-4">
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-          onChange={handleRecaptchaChange}
-        />
+        <div className="transform scale-110 sm:scale-100 md:scale-100 lg:scale-100 xl:scale-100 min-w-[320px] max-w-[450px] touch-manipulation">
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+            onChange={handleRecaptchaChange}
+            theme="light"
+            size="normal"
+            data-theme="light"
+            data-size="normal"
+            data-badge="inline"
+          />
+        </div>
       </div>
 
       {/* Submit Button */}
