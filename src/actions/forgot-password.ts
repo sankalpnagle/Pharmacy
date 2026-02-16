@@ -1,5 +1,4 @@
 "use server";
-export const runtime = "nodejs";
 
 import { prisma } from "@/lib/prisma";
 import { getUserByEmail } from "@/data/user";
