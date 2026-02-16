@@ -12,7 +12,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       const existingUser = await getUserById(user.id ?? "");
 
-      if (!existingUser?.emailVerified) {
+      if (!existingUser) {
         return false;
       }
 

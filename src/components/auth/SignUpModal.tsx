@@ -12,41 +12,8 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { createUser } from "@/services/auth";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
-import ReCAPTCHA from "react-google-recaptcha";
 import { t } from "@/utils/translate";
 
-// Add styles for mobile-friendly reCAPTCHA
-const recaptchaStyles = `
-  .g-recaptcha {
-    transform: scale(1);
-    transform-origin: 0 0;
-  }
-  
-  @media (max-width: 768px) {
-    .g-recaptcha {
-      transform: scale(1.1);
-      transform-origin: 0 0;
-    }
-    
-    .g-recaptcha iframe {
-      width: 100% !important;
-      height: auto !important;
-      min-height: 78px !important;
-    }
-    
-    .g-recaptcha > div {
-      width: 100% !important;
-      height: auto !important;
-    }
-  }
-  
-  /* Ensure touch-friendly interaction */
-  .g-recaptcha * {
-    touch-action: manipulation;
-  }
-`;
-
-// Define base form data type (without confirmPassword for backend)
 type BaseFormData = {
   name: string;
   email: string;
@@ -92,8 +59,6 @@ const SignUpModal = () => {
   const [showDoctorPassword, setShowDoctorPassword] = useState(false);
   const [showDoctorConfirmPassword, setShowDoctorConfirmPassword] =
     useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { activeModal, openModal, closeModal } = useModal();
   const router = useRouter();
 
@@ -127,11 +92,6 @@ const SignUpModal = () => {
   }, [view, reset]);
 
   const onSubmit = async (data: FormData) => {
-    if (!recaptchaToken) {
-      toast.error("Please complete the reCAPTCHA verification");
-      return;
-    }
-
     try {
       setIsSubmitting(true);
       const formData = new FormData();
@@ -142,7 +102,6 @@ const SignUpModal = () => {
       formData.append("password", data.password);
       formData.append("contactNo", data.contactNo);
       formData.append("role", data.role);
-      formData.append("recaptchaToken", recaptchaToken);
 
       // Doctor-specific fields
       if (view === "DOCTOR") {
@@ -164,9 +123,6 @@ const SignUpModal = () => {
         toast.success("User Created Successfully!");
         openModal("signin");
         closeModal();
-        // Reset reCAPTCHA
-        recaptchaRef.current?.reset();
-        setRecaptchaToken(null);
       }
     } catch (error: any) {
       console.error("Signup error:", error);
@@ -175,23 +131,13 @@ const SignUpModal = () => {
         error?.message ||
         "An unexpected error occurred";
       toast.error(errorMessage);
-      // Reset reCAPTCHA on error
-      recaptchaRef.current?.reset();
-      setRecaptchaToken(null);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleRecaptchaChange = (token: string | null) => {
-    setRecaptchaToken(token);
-  };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 px-4 ">
-      {/* Add mobile-friendly reCAPTCHA styles */}
-      <style dangerouslySetInnerHTML={{ __html: recaptchaStyles }} />
-
       {/* User / Doctor Toggle Buttons */}
       <div className="flex gap-x-2">
         <Button
@@ -220,23 +166,6 @@ const SignUpModal = () => {
       {view === "USER" && (
         <div>
           <div className="grid sm:grid-cols-2 gap-x-5">
-            {/* <div className="space-y-2 col-span-2 mb-3 text-[#10847E]">
-              <label className="block text-sm">Image</label>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("image", file); // Set the file using React Hook Form
-                  }
-                }}
-              />
-              {errors.image && (
-                <p className="text-red-500 text-sm">{errors.image.message}</p>
-              )}
-            </div> */}
-
             <div className="space-y-2 text-[#10847E]">
               <label className="block text-sm">{t("name")}</label>
               <Input
@@ -342,22 +271,6 @@ const SignUpModal = () => {
       {view === "DOCTOR" && (
         <div>
           <div className="grid sm:grid-cols-3 gap-x-7 mt-2.5">
-            {/* <div className="space-y-2 col-span-3 mb-3 text-[#10847E]">
-              <label className="block text-sm">Image</label>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setValue("image", file); // Set the file using React Hook Form
-                  }
-                }}
-              />
-              {errors.image && (
-                <p className="text-red-500 text-sm">{errors.image.message}</p>
-              )}
-            </div> */}
             <div className="space-y-2 text-[#10847E]">
               <label className="block text-sm">
                 {t("doctor_license_number")}
@@ -520,27 +433,11 @@ const SignUpModal = () => {
         </div>
       )}
 
-      {/* Add reCAPTCHA before the submit button */}
-      <div className="flex justify-center my-4">
-        <div className="transform scale-110 sm:scale-100 md:scale-100 lg:scale-100 xl:scale-100 min-w-[320px] max-w-[450px] touch-manipulation">
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-            onChange={handleRecaptchaChange}
-            theme="light"
-            size="normal"
-            data-theme="light"
-            data-size="normal"
-            data-badge="inline"
-          />
-        </div>
-      </div>
-
       {/* Submit Button */}
       <Button
         type="submit"
         className="bg-[#10847E] mt-6 flex justify-center text-white mx-auto w-[200px] rounded-full"
-        disabled={isSubmitting || !recaptchaToken}
+        disabled={isSubmitting}
       >
         {isSubmitting ? t("signing_up") : t("sign_up")}
       </Button>

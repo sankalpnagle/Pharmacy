@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { createUser } from "@/services/auth";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
-import ReCAPTCHA from "react-google-recaptcha";
 
 // Frontend validation schema
 const AdminRegisterSchema = UserSchema.extend({
@@ -27,8 +26,6 @@ const AdminRegisterPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const router = useRouter();
 
   const {
@@ -48,11 +45,6 @@ const AdminRegisterPage = () => {
   const confirmPassword = watch("confirmPassword");
 
   const onSubmit = async (data: FormData) => {
-    if (!recaptchaToken) {
-      toast.error("Please complete the reCAPTCHA verification");
-      return;
-    }
-
     try {
       setIsSubmitting(true);
       const formData = new FormData();
@@ -62,7 +54,6 @@ const AdminRegisterPage = () => {
       formData.append("password", data.password);
       formData.append("contactNo", data.contactNo);
       formData.append("role", "PHARMACY_STAFF");
-      formData.append("recaptchaToken", recaptchaToken);
 
       const response = await createUser(formData);
 
@@ -70,8 +61,6 @@ const AdminRegisterPage = () => {
         toast.success("PHARMACY STAFF account created successfully!");
         router.push("/");
         reset();
-        recaptchaRef.current?.reset();
-        setRecaptchaToken(null);
       }
     } catch (error: any) {
       console.error("Registration error:", error);
@@ -80,15 +69,9 @@ const AdminRegisterPage = () => {
         error?.message ||
         "An unexpected error occurred";
       toast.error(errorMessage);
-      recaptchaRef.current?.reset();
-      setRecaptchaToken(null);
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleRecaptchaChange = (token: string | null) => {
-    setRecaptchaToken(token);
   };
 
   return (
@@ -206,14 +189,6 @@ const AdminRegisterPage = () => {
                   {errors.contactNo.message}
                 </p>
               )}
-            </div>
-
-            <div className="flex justify-center">
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-                onChange={handleRecaptchaChange}
-              />
             </div>
           </div>
 
