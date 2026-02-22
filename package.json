@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node server.mjs",
     "dev:socket": "node server.mjs",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "postinstall": "prisma generate",
     "start": "cross-env NODE_ENV=production node server.mjs",
     "lint": "next lint"
@@ -49,7 +49,7 @@
     "formidable": "^3.5.2",
     "lucide-react": "^0.479.0",
     "micro": "^10.0.1",
-    "next": "^16.1.6",
+    "next": "^15.5.12",
     "next-auth": "^5.0.0-beta.25",
     "prisma": "^5.22.0",
     "react": "^19.0.0",
@@ -67,7 +67,7 @@
     "socket.io-client": "^4.8.1",
     "sonner": "^2.0.3",
     "stripe": "^18.0.0",
-    "swiper": "^11.2.6",
+    "swiper": "^12.1.2",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
@@ -78,7 +78,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
+    "@eslint/eslintrc": "^0.1.0",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/formidable": "^3.4.5",
@@ -89,8 +89,8 @@
     "@types/react-google-recaptcha": "^2.1.9",
     "@types/xlsx": "^0.0.35",
     "cross-env": "^7.0.3",
-    "eslint": "^9",
-    "eslint-config-next": "15.2.1",
+    "eslint": "^10.0.1",
+    "eslint-config-next": "^0.2.4",
     "tailwindcss": "^4",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"

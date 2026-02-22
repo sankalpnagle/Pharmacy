@@ -1,4 +1,4 @@
-import translations from "@../../../public/locales/en.json";
+import translations from "../locales/en.json";
 
 export const t = (key: string): string => {
   return translations[key] || key;
