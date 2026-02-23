@@ -40,7 +40,7 @@ import { Input } from "@/components/ui/input";
 import { DatePickerWithRange } from "@/components/custom_components/date_range_picker";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState, useMemo } from "react";
-import { getSocket } from "@/lib/socket";
+import { socket } from "@/lib/socket";
 import { getAllOrder } from "@/services/order";
 import { formatDate } from "@/utils/formatDate";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -185,47 +185,36 @@ export default function Dashboard() {
 
   useEffect(() => {
     // Always fetch orders from API on component mount
-    // This ensures data loads regardless of socket connection status
     fetchAllOrders();
 
-    // Try to connect to socket for real-time updates (best effort, not critical)
-    try {
-      const socket = getSocket();
+    // Real-time updates via socket
+    const handleNewOrder = (newOrder: Orders) => {
+      console.log("New order received via socket:", newOrder);
+      setOrders((prevOrders) => {
+        const exists = prevOrders.some((o) => o.id === newOrder.id);
+        if (exists) {
+          return prevOrders.map((o) => (o.id === newOrder.id ? newOrder : o));
+        }
+        return [newOrder, ...prevOrders];
+      });
+    };
 
-      const handleNewOrder = (newOrder: Orders) => {
-        console.log("New order received via socket:", newOrder);
-        setOrders((prevOrders) => {
-          const exists = prevOrders.some((o) => o.id === newOrder.id);
-          if (exists) {
-            return prevOrders.map((o) => (o.id === newOrder.id ? newOrder : o));
-          }
-          return [newOrder, ...prevOrders];
-        });
-      };
-
-      const handleOrderUpdated = (updatedOrder: Orders) => {
-        console.log("Order updated via socket:", updatedOrder);
-        setOrders((prevOrders) =>
-          prevOrders.map((o) => (o.id === updatedOrder.id ? updatedOrder : o)),
-        );
-      };
-
-      socket.on("newOrder", handleNewOrder);
-      socket.on("orderUpdated", handleOrderUpdated);
-      socket.on("payment", handleNewOrder);
-
-      return () => {
-        socket.off("newOrder", handleNewOrder);
-        socket.off("orderUpdated", handleOrderUpdated);
-        socket.off("payment", handleNewOrder);
-      };
-    } catch (socketError) {
-      console.warn(
-        "Socket connection failed (this is OK on serverless):",
-        socketError,
+    const handleOrderUpdated = (updatedOrder: Orders) => {
+      console.log("Order updated via socket:", updatedOrder);
+      setOrders((prevOrders) =>
+        prevOrders.map((o) => (o.id === updatedOrder.id ? updatedOrder : o)),
       );
-      // Socket failure is not critical - data already loaded from API
-    }
+    };
+
+    socket.on("newOrder", handleNewOrder);
+    socket.on("orderUpdated", handleOrderUpdated);
+    socket.on("payment", handleNewOrder);
+
+    return () => {
+      socket.off("newOrder", handleNewOrder);
+      socket.off("orderUpdated", handleOrderUpdated);
+      socket.off("payment", handleNewOrder);
+    };
   }, []);
 
   const filterData = [

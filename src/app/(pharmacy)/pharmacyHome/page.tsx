@@ -33,7 +33,7 @@ import { Input } from "@/components/ui/input";
 import { DatePickerWithRange } from "@/components/custom_components/date_range_picker";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getSocket } from "@/lib/socket";
+import { socket } from "@/lib/socket";
 import { getAllOrder, getAllPaidOrder } from "@/services/order";
 import { formatDate } from "@/utils/formatDate";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -211,23 +211,13 @@ export default function PharmacyHome() {
 
     fetchAllOrders();
 
-    // Try to connect to socket for real-time updates (best effort, not critical)
-    try {
-      const socket = getSocket();
-      socket.on("payment", handlePayment);
+    // Real-time updates via socket
+    socket.on("payment", handlePayment);
 
-      return () => {
-        socket.off("payment", handlePayment);
-      };
-    } catch (socketError) {
-      console.warn(
-        "Socket connection failed (this is OK on serverless):",
-        socketError,
-      );
-      // Socket failure is not critical - data already loaded from API
-      return () => {};
-    }
-  }, []);
+    return () => {
+      socket.off("payment", handlePayment);
+    };
+  }, [showLoader, hideLoader]);
 
   console.log(orders, "orders");
 
