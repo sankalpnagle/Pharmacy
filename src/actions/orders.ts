@@ -29,7 +29,7 @@ export async function createOrder(
   role: "USER" | "DOCTOR" | "PHARMACY_STAFF" | "ADMIN",
   email: string,
   name: string,
-  phone: string
+  phone: string,
 ) {
   const deliveryAddressId = formData.get("deliveryAddressId") as string;
   const patientId = formData.get("patientId") as string | null;
@@ -99,14 +99,14 @@ export async function createOrder(
   const totalPrice = totalProductCost + deliveryCost;
 
   const prescriptionRequired = products.some(
-    (product) => product.requiresPrescription
+    (product) => product.requiresPrescription,
   );
   let prescriptionImageUrl: string | null = null;
 
   if (prescriptionFile) {
     prescriptionImageUrl = await uploadToCloudinary(
       prescriptionFile,
-      `prescriptions/${uuidv4()}`
+      `prescriptions/${uuidv4()}`,
     );
   } else if (prescriptionRequired) {
     throw new Error("Prescription image is required");
@@ -189,7 +189,7 @@ export async function createOrder(
 
   // Emit WebSocket event for new order
   if (global.io) {
-    global.io.emit("order", {
+    global.io.emit("newOrder", {
       id: orderResult.id,
       orderNumber: orderResult.orderNumber.toString(),
       user: {
@@ -251,11 +251,11 @@ export async function createOrder(
         message: `Hi ${
           target.name
         }, your order (#${orderCodeValue}) has been placed. Total: $${totalPrice.toFixed(
-          2
+          2,
         )} (Products: $${totalProductCost.toFixed(
-          2
+          2,
         )}, Delivery: $${deliveryCost.toFixed(
-          2
+          2,
         )}, Weight: ${totalWeight.toFixed(2)} lbs)`,
       });
     }
@@ -446,7 +446,7 @@ export async function markOrderAsFulfilled(orderId: string, staffId: string) {
 export async function rejectOrder(
   orderId: string,
   staffId: string,
-  comment?: string
+  comment?: string,
 ) {
   try {
     const order = await prisma.order.findUnique({
@@ -541,7 +541,7 @@ export async function rejectOrder(
 export async function refundOrder(
   orderId: string,
   staffId: string,
-  comment?: string
+  comment?: string,
 ) {
   try {
     const order = await prisma.order.findUnique({ where: { id: orderId } });

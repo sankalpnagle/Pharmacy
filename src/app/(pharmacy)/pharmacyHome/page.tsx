@@ -212,10 +212,17 @@ export default function PharmacyHome() {
     fetchAllOrders();
 
     // Real-time updates via socket
+    const handleOrderStatusChange = (data: any) => {
+      console.log("📊 Order status changed via socket:", data);
+      handlePayment({ ...data, id: data.orderId, status: data.status });
+    };
+
     socket.on("payment", handlePayment);
+    socket.on("orderStatusUpdate", handleOrderStatusChange);
 
     return () => {
       socket.off("payment", handlePayment);
+      socket.off("orderStatusUpdate", handleOrderStatusChange);
     };
   }, [showLoader, hideLoader]);
 

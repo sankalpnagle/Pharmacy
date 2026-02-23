@@ -189,7 +189,7 @@ export default function Dashboard() {
 
     // Real-time updates via socket
     const handleNewOrder = (newOrder: Orders) => {
-      console.log("New order received via socket:", newOrder);
+      console.log("🔔 New order received via socket:", newOrder);
       setOrders((prevOrders) => {
         const exists = prevOrders.some((o) => o.id === newOrder.id);
         if (exists) {
@@ -200,20 +200,40 @@ export default function Dashboard() {
     };
 
     const handleOrderUpdated = (updatedOrder: Orders) => {
-      console.log("Order updated via socket:", updatedOrder);
+      console.log("✏️ Order updated via socket:", updatedOrder);
       setOrders((prevOrders) =>
         prevOrders.map((o) => (o.id === updatedOrder.id ? updatedOrder : o)),
       );
     };
 
+    const handlePaymentReceived = (paidOrder: Orders) => {
+      console.log("💳 Payment received via socket:", paidOrder);
+      setOrders((prevOrders) =>
+        prevOrders.map((o) =>
+          o.id === paidOrder.id ? { ...o, status: "PAID" } : o,
+        ),
+      );
+    };
+
+    const handleOrderStatusUpdate = (data: any) => {
+      console.log("📊 Order status updated via socket:", data);
+      setOrders((prevOrders) =>
+        prevOrders.map((o) =>
+          o.id === data.orderId ? { ...o, status: data.status } : o,
+        ),
+      );
+    };
+
     socket.on("newOrder", handleNewOrder);
     socket.on("orderUpdated", handleOrderUpdated);
-    socket.on("payment", handleNewOrder);
+    socket.on("payment", handlePaymentReceived);
+    socket.on("orderStatusUpdate", handleOrderStatusUpdate);
 
     return () => {
       socket.off("newOrder", handleNewOrder);
       socket.off("orderUpdated", handleOrderUpdated);
-      socket.off("payment", handleNewOrder);
+      socket.off("payment", handlePaymentReceived);
+      socket.off("orderStatusUpdate", handleOrderStatusUpdate);
     };
   }, []);
 

@@ -72,12 +72,32 @@ export async function POST(req: Request) {
       });
 
       // Update order status to PAID
-      await prisma.order.update({
+      const updatedOrder = await prisma.order.update({
         where: { id: order.id },
         data: {
           status: "PAID",
         },
+        include: {
+          user: true,
+          patient: true,
+        },
       });
+
+      // Emit socket event for real-time update
+      const io = global.io;
+      if (io) {
+        io.emit("payment", {
+          id: updatedOrder.id,
+          orderNumber: updatedOrder.orderNumber,
+          userId: updatedOrder.userId,
+          patientId: updatedOrder.patientId,
+          status: updatedOrder.status,
+          totalPrice: updatedOrder.totalPrice,
+          createdAt: updatedOrder.createdAt,
+          user: updatedOrder.user,
+          patient: updatedOrder.patient,
+        });
+      }
 
       return NextResponse.json(
         {
