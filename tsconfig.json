@@ -23,12 +23,11 @@
     }
   },
   "include": [
+    "svgr.d.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    "svgr.d.ts",
-    "server.mjs"
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
