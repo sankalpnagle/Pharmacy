@@ -2,9 +2,8 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import image from "@/../public/images/medicine/img-6.png";
-import CartIcon from "@/../public/icons/faShoppingCart.svg";
-import Minimize from "@/../public/icons/minimize.svg";
-import Maximize from "@/../public/icons/plus_circle.svg";
+import { FaShoppingCart } from "react-icons/fa";
+import { FiMinus, FiPlus } from "react-icons/fi";
 import { productById } from "@/services/productService";
 import { useParams, useRouter } from "next/navigation";
 import img from "@/../public/images/cart/product.jpg";
@@ -110,7 +109,7 @@ const ProductById = () => {
         : "bg-primary"
     }`}
                 >
-                  <CartIcon className="scale-75" /> {t("add_to_cart")}
+                  <FaShoppingCart className="scale-75" /> {t("add_to_cart")}
                 </button>
               )}
             </div>
@@ -119,13 +118,13 @@ const ProductById = () => {
 
               <div className="flex -ml-2 items-center gap-3 mt-3">
                 <button onClick={decreaseQuantity}>
-                  <Minimize className="scale-[0.65]" />
+                  <FiMinus className="scale-[0.65]" />
                 </button>
                 <span className=" px-5 py-1 border-2 rounded-xl border-primary bg-primary/10 text-primary text-xl font-semibold">
                   {selectedQuantity}
                 </span>
                 <button onClick={increaseQuantity}>
-                  <Maximize className="scale-[0.65]" />
+                  <FiPlus className="scale-[0.65]" />
                 </button>
               </div>
             </div>
@@ -144,13 +143,13 @@ const ProductById = () => {
 
               <div className="flex -ml-2 items-center gap-3 mt-3">
                 <button onClick={decreaseQuantity}>
-                  <Minimize className="scale-[0.65]" />
+                  <FiMinus className="scale-[0.65]" />
                 </button>
                 <span className=" px-5 py-1 border-2 rounded-xl border-primary bg-primary/10 text-primary text-xl font-semibold">
                   {selectedQuantity}
                 </span>
                 <button onClick={increaseQuantity}>
-                  <Maximize className="scale-[0.65]" />
+                  <FiPlus className="scale-[0.65]" />
                 </button>
               </div>
             </div>
@@ -177,7 +176,7 @@ const ProductById = () => {
         : "bg-primary"
     }`}
           >
-            <CartIcon className="scale-75" /> {t("add_to_cart")}
+            <FaShoppingCart className="scale-75" /> {t("add_to_cart")}
           </button>
         )}
       </div>

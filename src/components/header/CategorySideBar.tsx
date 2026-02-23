@@ -2,8 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
-import PlusIcon from "@/../public/icons/plusCircle.svg";
-import MinusIcon from "@/../public/icons/minusCircle.svg";
+import { FiPlusCircle, FiMinusCircle } from "react-icons/fi";
 import {
   Accordion,
   AccordionItem,
@@ -128,9 +127,9 @@ export default function CategorySideBar({
                           className="  flex items-center justify-center overflow-visible no-underline"
                         >
                           {openCategory === item.id ? (
-                            <MinusIcon className=" relative z-50  scale-[0.8]  " />
+                            <FiMinusCircle className=" relative z-50  scale-[0.8]  " />
                           ) : (
-                            <PlusIcon className=" relative z-50  scale-[0.8]  " />
+                            <FiPlusCircle className=" relative z-50  scale-[0.8]  " />
                           )}
                         </AccordionTrigger>
                       </div>

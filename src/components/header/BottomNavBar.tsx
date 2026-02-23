@@ -2,12 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import Home from "@/../public/icons/faHomeAlt.svg";
-import CateIcon from "@/../public/icons/faBoxesStacked.svg";
-import PayIcon from "@/../public/icons/faDollar.svg";
-import CartIcon from "@/../public/icons/faShoppingCart.svg";
-import UserIcon from "@/../public/icons/faUserCircle.svg";
-import RightArrow from "@/../public/icons/Primary.svg";
+import { FaHome, FaBox, FaDollarSign, FaShoppingCart } from "react-icons/fa";
 import { IoTriangle } from "react-icons/io5";
 import { BsPerson } from "react-icons/bs";
 import {
@@ -35,10 +30,10 @@ const BottomNavBar = () => {
   };
 
   const navLinks = [
-    { label: t("home"), path: "/", icon: Home },
-    { label: t("categories"), path: "/category", icon: CateIcon },
-    { label: t("pay_order"), path: "/payOrder", icon: PayIcon },
-    { label: t("cart"), path: "/cart", icon: CartIcon },
+    { label: t("home"), path: "/", icon: FaHome },
+    { label: t("categories"), path: "/category", icon: FaBox },
+    { label: t("pay_order"), path: "/payOrder", icon: FaDollarSign },
+    { label: t("cart"), path: "/cart", icon: FaShoppingCart },
   ];
 
   return (
@@ -55,7 +50,7 @@ const BottomNavBar = () => {
                     : "hover:text-gray-200"
                 }`}
               >
-                <Icon fill={isActive(path) ? "#10847E" : "white"} />
+                <Icon className={isActive(path) ? "text-[#10847E]" : "text-white"} />
                 <span>{label}</span>
               </Link>
             </li>

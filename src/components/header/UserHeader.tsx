@@ -2,12 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import Home from "@/../public/icons/faHomeAlt.svg";
-import CateIcon from "@/../public/icons/faBoxesStacked.svg";
-import PayIcon from "@/../public/icons/faDollar.svg";
-import CartIcon from "@/../public/icons/faShoppingCart.svg";
-import UserIcon from "@/../public/icons/faUserCircle.svg";
-import RightArrow from "@/../public/icons/Primary.svg";
+import { FaHome, FaBox, FaDollarSign, FaShoppingCart, FaUserCircle } from "react-icons/fa";
+import { IoChevronForward } from "react-icons/io5";
 import { IoTriangle } from "react-icons/io5";
 import { BsPerson } from "react-icons/bs";
 import {
@@ -63,7 +59,7 @@ const UserHeader = () => {
                     : "hover:text-gray-200"
                 }`}
               >
-                <Home fill={isActive("/") ? "yellow" : "white"} />
+                <FaHome className={isActive("/") ? "text-yellow-400" : "text-white"} />
                 <span>{t("home")}</span>
               </Link>
             </li>
@@ -76,10 +72,7 @@ const UserHeader = () => {
                     : "hover:text-gray-200"
                 }`}
               >
-                <CateIcon
-                  className={`${isActive("/category") && "text-[#10847E]"}`}
-                  fill={isActive("/categories") ? "yellow" : "white"}
-                />
+                <FaBox className={isActive("/category") ? "text-[#10847E]" : "text-white"} />
                 <span>{t("categories")}</span>
               </Link>
             </li>
@@ -92,7 +85,7 @@ const UserHeader = () => {
                     : "hover:text-gray-200"
                 }`}
               >
-                <PayIcon fill={isActive("/payOrder") ? "yellow" : "white"} />
+                <FaDollarSign className={isActive("/payOrder") ? "text-yellow-400" : "text-white"} />
                 <span>{t("pay_order")}</span>
               </Link>
             </li>
@@ -105,7 +98,7 @@ const UserHeader = () => {
                     : "hover:text-gray-200"
                 }`}
               >
-                <CartIcon fill={isActive("/cart") ? "yellow" : "white"} />
+                <FaShoppingCart className={isActive("/cart") ? "text-yellow-400" : "text-white"} />
                 <span>{t("cart")}</span>
               </Link>
             </li>
@@ -122,7 +115,7 @@ const UserHeader = () => {
                         />
                       </div>
                     ) : (
-                      <UserIcon className="mt-1.5 hover:cursor-pointer" />
+                      <FaUserCircle className="mt-1.5 hover:cursor-pointer text-2xl" />
                     )}
                   </PopoverTrigger>
                   <PopoverContent className="bg-[#FFFFFF] rounded-lg  border-[#10847E] py-2.5 absolute -right-7 top-[12px] w-[8.5rem] mx-auto">
@@ -151,9 +144,8 @@ const UserHeader = () => {
                             onClick={handleLogout}
                             className="flex gap-x-1 items-center hover:cursor-pointer"
                           >
-                            <RightArrow
-                              className="w-4 mt-0.5 fi text-[#F62626] rotate-180"
-                              style={{ strokeWidth: "1.5" }}
+                            <IoChevronForward
+                              className="w-4 mt-0.5 text-[#F62626] rotate-180"
                             />
                             <span className="ml-1.5 text-[#F62626] font-medium">
                               {" "}
@@ -166,10 +158,7 @@ const UserHeader = () => {
                           onClick={() => openModal("signin")}
                           className="flex gap-x-1 items-center hover:cursor-pointer"
                         >
-                          <RightArrow
-                            className="w-4 mt-0.5 text-primary"
-                            style={{ strokeWidth: "1.5" }}
-                          />
+                          <IoChevronForward className="w-4 mt-0.5 text-primary" />
                           <span className="text-primary font-medium ml-1.5">
                             {" "}
                             {t("login")}
@@ -212,7 +201,7 @@ const UserHeader = () => {
                         />
                       </div>
                     ) : (
-                      <UserIcon className="mt-1.5 hover:cursor-pointer" />
+                      <FaUserCircle className="mt-1.5 hover:cursor-pointer text-2xl" />
                     )}
                   </PopoverTrigger>
                   <PopoverContent className="bg-[#FFFFFF] rounded-lg  border-[#10847E] py-2.5 absolute -right-7 top-[12px] w-[8.5rem] mx-auto">
@@ -241,9 +230,8 @@ const UserHeader = () => {
                             onClick={handleLogout}
                             className="flex gap-x-1 items-center hover:cursor-pointer"
                           >
-                            <RightArrow
-                              className="w-4 mt-0.5 fi text-[#F62626] rotate-180"
-                              style={{ strokeWidth: "1.5" }}
+                            <IoChevronForward
+                              className="w-4 mt-0.5 text-[#F62626] rotate-180"
                             />
                             <span className="ml-1.5 text-[#F62626] font-medium">
                               {" "}
@@ -256,10 +244,7 @@ const UserHeader = () => {
                           onClick={() => openModal("signin")}
                           className="flex gap-x-1 items-center hover:cursor-pointer"
                         >
-                          <RightArrow
-                            className="w-4 mt-0.5 text-primary"
-                            style={{ strokeWidth: "1.5" }}
-                          />
+                          <IoChevronForward className="w-4 mt-0.5 text-primary" />
                           <span className="text-primary font-medium ml-1.5">
                             {" "}
                             {t("login")}

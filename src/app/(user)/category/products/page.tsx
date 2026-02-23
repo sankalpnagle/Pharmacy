@@ -9,8 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
-import PlusIcon from "@/../public/icons/plusCircle.svg";
-import MinusIcon from "@/../public/icons/minusCircle.svg";
+import { FiPlusCircle, FiMinusCircle } from "react-icons/fi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -281,9 +280,9 @@ const Products = () => {
                                   </FormLabel>
                                   <div className="flex items-center justify-center">
                                     {openCategory === item.id ? (
-                                      <MinusIcon className="scale-90" />
+                                      <FiMinusCircle className="scale-90" />
                                     ) : (
-                                      <PlusIcon className="scale-90" />
+                                      <FiPlusCircle className="scale-90" />
                                     )}
                                   </div>
                                 </AccordionTrigger>

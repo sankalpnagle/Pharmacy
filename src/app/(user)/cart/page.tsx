@@ -1,12 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import Minimize from "public/icons/minimize.svg";
-import Maximize from "public/icons/plus_circle.svg";
-import Delete from "public/icons/delete.svg";
-import Location from "public/icons/location.svg";
-import Plane from "public/icons/plane.svg";
-import FileSvg from "public/icons/file.svg";
+import { FiMinus, FiPlus, FiTrash2, FiMapPin, FiSend, FiFile } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
@@ -492,7 +487,7 @@ const CartPage = () => {
                             onClick={() => decreaseQuantity(product.id)}
                             aria-label="Decrease quantity"
                           >
-                            <Minimize className="scale-75" />
+                            <FiMinus className="scale-75" />
                           </button>
                           <div className="h-fit w-fit px-3 border-2 rounded-xl border-primary bg-primary/10 text-primary text-2xl font-semibold">
                             {product.quantity}
@@ -501,14 +496,14 @@ const CartPage = () => {
                             onClick={() => increaseQuantity(product.id)}
                             aria-label="Increase quantity"
                           >
-                            <Maximize className="scale-75" />
+                            <FiPlus className="scale-75" />
                           </button>
                           <button
                             onClick={() => handleRemoveFromCart(product.id)}
                             className="ml-2"
                             aria-label="Remove item"
                           >
-                            <Delete className="scale-75" />
+                            <FiTrash2 className="scale-75" />
                           </button>
                         </div>
                       </div>
@@ -568,7 +563,7 @@ const CartPage = () => {
                     className="flex gap-x-2 items-center"
                     aria-label="Upload prescription"
                   >
-                    <FileSvg className="scale-75" />
+                    <FiFile className="scale-75" />
                     <span className="text-primary font-medium">
                       {fileName ? (
                         <p className="truncate w-32 min-w-44">{fileName}</p>
@@ -754,7 +749,7 @@ const CartPage = () => {
                         }}
                         aria-label="Add address"
                       >
-                        <Location className="scale-75" />
+                        <FiMapPin className="scale-75" />
                         {t("add_address")}
                       </div>
                     )}
@@ -793,7 +788,7 @@ const CartPage = () => {
                         </>
                       ) : (
                         <>
-                          <Plane className="" />
+                          <FiSend className="" />
                           {t("place_order")}
                         </>
                       )}

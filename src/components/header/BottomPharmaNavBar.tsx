@@ -7,8 +7,8 @@ import { BiEdit } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
 import { BsPerson } from "react-icons/bs";
 import { IoTriangle } from "react-icons/io5";
-import UserIcon from "@/../public/icons/faUserCircle.svg";
-import RightArrow from "@/../public/icons/Primary.svg";
+import { FaUserCircle } from "react-icons/fa";
+import { IoChevronForward } from "react-icons/io5";
 import {
   Popover,
   PopoverContent,
@@ -71,7 +71,7 @@ const BottomPharmaNavBar = () => {
                     />
                   </div>
                 ) : (
-                  <UserIcon className="w-6 h-6" />
+                  <FaUserCircle className="w-6 h-6" />
                 )}
               </PopoverTrigger>
               <PopoverContent className="bg-white rounded-lg border border-[#10847E] py-2 w-36 shadow-xl">
@@ -92,7 +92,7 @@ const BottomPharmaNavBar = () => {
                       onClick={handleLogout}
                       className="flex items-center px-3 py-1 text-sm text-[#F62626] hover:bg-gray-100 w-full"
                     >
-                      <RightArrow className="w-4 h-4 rotate-180 mr-2" />
+                      <IoChevronForward className="w-4 h-4 rotate-180 mr-2" />
                       {t("logout")}
                     </button>
                   </>
@@ -101,7 +101,7 @@ const BottomPharmaNavBar = () => {
                     onClick={() => openModal("signin")}
                     className="flex items-center px-3 py-1 text-sm text-primary hover:bg-gray-100 w-full"
                   >
-                    <RightArrow className="w-4 h-4 mr-2" />
+                    <IoChevronForward className="w-4 h-4 mr-2" />
                     {t("login")}
                   </button>
                 )}

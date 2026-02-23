@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
-import Copy from "public/icons/copy.svg";
+import { FiCopy } from "react-icons/fi";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { t } from "@/utils/translate";
@@ -214,7 +214,7 @@ const AfterPlacingOrder = () => {
             onClick={handleCopy}
             className="rounded-full border-dashed border-2 w-[150px] py-1 bg-primary/10 flex items-center justify-center border-primary cursor-pointer text-xl font-medium text-primary "
           >
-            <Copy className="scale-50" /> <span>{code}</span>{" "}
+            <FiCopy className="scale-50" /> <span>{code}</span>{" "}
           </button>
           <h1 className="text-sm font-medium ">
             {t("give_this_code_to_your_relative_to_have_the_order_paid")}
@@ -230,7 +230,7 @@ const AfterPlacingOrder = () => {
             onClick={handleLinkCopy}
             className="rounded-full border-dashed border-2 w-[150px]  bg-primary/10 flex items-center justify-center border-primary text-sm cursor-pointer font-medium text-primary "
           >
-            <Copy className="scale-40" /> <span>{t("copy_link")}</span>{" "}
+            <FiCopy className="scale-40" /> <span>{t("copy_link")}</span>{" "}
           </button>
           {/* <h1 className="text-sm font-medium ">
                     Give this code to your relative to have the order paid

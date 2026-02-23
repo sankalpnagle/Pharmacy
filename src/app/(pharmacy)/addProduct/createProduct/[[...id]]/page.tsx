@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Plus from "@/../public/icons/plusCircleLight.svg";
+import { FiPlus } from "react-icons/fi";
 import SelectorInput from "@/components/custom_components/SelectorInput";
 import {
   createCategory,
@@ -432,7 +432,7 @@ const createProductPage = () => {
                   setShowCategoryInputField(!showCategoryInputField)
                 }
               >
-                <Plus className="scale-[0.6]" />
+                <FiPlus className="scale-[0.6]" />
               </button>
             </div>
           </div>
@@ -482,7 +482,7 @@ const createProductPage = () => {
                 }
                 disabled={!watch("categoryId")}
               >
-                <Plus className="scale-[0.6]" />
+                <FiPlus className="scale-[0.6]" />
               </button>
             </div>
           </div>
@@ -609,7 +609,7 @@ const createProductPage = () => {
                 }
                 disabled={!watch("categoryId")}
               >
-                <Plus className="scale-[0.6]" />
+                <FiPlus className="scale-[0.6]" />
               </button>
             </div>
           </div>

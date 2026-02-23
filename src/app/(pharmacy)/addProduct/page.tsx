@@ -25,8 +25,8 @@ import {
 } from "@/components/ui/table";
 
 import SearchInput from "@/components/custom_components/SearchInput";
-import Plus from "@/../public/icons/plus_circle.svg";
-import Exel from "@/../public/icons/exel.svg";
+import { FiPlus } from "react-icons/fi";
+import { SiMicrosoftexcel } from "react-icons/si";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
 import axios from "axios";
@@ -277,7 +277,7 @@ export default function AddProduct() {
               onClick={() => router.push("/addProduct/createProduct")}
               className="flex bg-primary  mt-5 sm:mt-0 hover:cursor-pointer items-center rounded-xl text-white justify-center pr-3 pl-1"
             >
-              <Plus className="text-white scale-50" />
+              <FiPlus className="text-white scale-50" />
               {t("add_new_product")}
             </button>
           </div>
@@ -288,7 +288,7 @@ export default function AddProduct() {
               className="flex bg-primary mt-5 sm:mt-0 hover:cursor-pointer items-center rounded-xl px-4 pb-1 text-white justify-center h-10 "
               onClick={() => setShowUploadModal(true)}
             >
-              <Exel className="text-white scale-75" />
+              <SiMicrosoftexcel className="text-white scale-75" />
               <p className="ml-1 mt-1">{t("bulk_upload")}</p>
             </button>
           </DialogTrigger>

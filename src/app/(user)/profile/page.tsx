@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import ProfilePicture from "@/../public/images/profilePicture.png";
-import CameraIcon from "@/../public/icons/camera_icon.svg";
+import { FiCamera } from "react-icons/fi";
 import userImage from "@/../public/images/user.png";
 import { Button } from "@/components/ui/button";
 import { useModal } from "@/hooks/useModal";

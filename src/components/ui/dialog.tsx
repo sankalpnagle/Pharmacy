@@ -3,7 +3,6 @@
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { XIcon } from "lucide-react"
-import Close from "@/../public/icons/close.svg";
 
 
 import { cn } from "@/lib/utils"
@@ -66,7 +65,7 @@ function DialogContent({
       >
         {children}
         <DialogPrimitive.Close className="absolute top-3 right-3 flex items-center justify-center  rounded-full transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-0">
-          <Close className="scale-50" />
+          <XIcon className="scale-50 h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
 
