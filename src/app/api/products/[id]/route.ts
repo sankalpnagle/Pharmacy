@@ -6,23 +6,9 @@ import {
   getProducts,
 } from "@/actions/product";
 import { auth } from "@/lib/auth";
-import {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-} from "@aws-sdk/client-s3";
+import { uploadToCloudinary, deleteFromCloudinary } from "@/lib/cloudinary";
 import { ProductSchema } from "@/schemas";
 import { prisma } from "@/lib/prisma";
-
-const s3 = new S3Client({
-  region: process.env.AWS_REGION!,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
-});
-
-const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!;
 
 export async function GET(
   req: NextRequest,
@@ -83,25 +69,16 @@ export async function PATCH(
         }
 
         try {
-          const arrayBuffer = await imageData.arrayBuffer();
-          const buffer = Buffer.from(arrayBuffer);
           const fileName = `products/${Date.now()}-${imageData.name.replace(
             /\s+/g,
             "-"
           )}`;
-
-          await s3.send(
-            new PutObjectCommand({
-              Bucket: BUCKET_NAME,
-              Key: fileName,
-              Body: buffer,
-              ContentType: imageData.type,
-            })
+          updateData.imageUrl = await uploadToCloudinary(
+            imageData as File,
+            fileName
           );
-
-          updateData.imageUrl = `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
         } catch (error) {
-          console.error("S3 Upload Error:", error);
+          console.error("Cloudinary Upload Error:", error);
           return NextResponse.json(
             { error: "Failed to upload image to storage" },
             { status: 500 }
@@ -163,18 +140,12 @@ export async function DELETE(
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
   }
 
-  // Delete the image from S3 if it exists
+  // Delete the image from Cloudinary if it exists
   if (product.imageUrl) {
     try {
-      const imageKey = product.imageUrl.split(".com/")[1];
-      await s3.send(
-        new DeleteObjectCommand({
-          Bucket: BUCKET_NAME,
-          Key: imageKey,
-        })
-      );
+      await deleteFromCloudinary(product.imageUrl);
     } catch (error) {
-      console.error("Error deleting image from S3:", error);
+      console.error("Error deleting image from Cloudinary:", error);
       // Continue with product deletion even if image deletion fails
     }
   }

@@ -1,20 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { unzip } from "unzipit";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
-
-// S3 Client Setup
-const s3 = new S3Client({
-  region: process.env.AWS_REGION!,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
-});
-
-const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!;
 
 export async function POST(req: Request) {
   try {
@@ -121,18 +110,12 @@ export async function POST(req: Request) {
           "-"
         )}`;
 
-        // Upload to S3
-        await s3.send(
-          new PutObjectCommand({
-            Bucket: BUCKET_NAME,
-            Key: fileName,
-            Body: buffer,
-            ContentType: entry.type,
-          })
+        // Upload to Cloudinary
+        const imageUrl = await uploadToCloudinary(
+          buffer,
+          fileName,
+          entry.type || "image/jpeg"
         );
-
-        // Generate the S3 URL
-        const imageUrl = `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
 
         // Update the product with the new image URL
         const updatedProduct = await prisma.product.update({

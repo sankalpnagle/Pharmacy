@@ -2,24 +2,13 @@ import { NextResponse } from "next/server";
 import { createProduct, getProducts } from "@/actions/product";
 import { auth } from "@/lib/auth";
 import { ProductSchema } from "@/schemas";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 // Get All Product
 export async function GET() {
   const response = await getProducts();
   return NextResponse.json(response);
 }
-
-// S3 Client Setup
-const s3 = new S3Client({
-  region: process.env.AWS_REGION!,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
-});
-
-const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!;
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -47,25 +36,13 @@ export async function POST(req: Request) {
     weight: parseFloat(formData.get("weight") as string),
   };
 
-  // 🔹 Upload image to S3 if present
+  // 🔹 Upload image to Cloudinary if present
   if (imageFile) {
-    const arrayBuffer = await imageFile.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const fileName = `products/${Date.now()}-${imageFile.name}`;
-
-    const uploadParams = {
-      Bucket: BUCKET_NAME,
-      Key: fileName,
-      Body: buffer,
-      ContentType: imageFile.type,
-      // ACL: "public-read",
-    };
-
     try {
-      await s3.send(new PutObjectCommand(uploadParams));
-      productData.imageUrl = `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+      const fileName = `products/${Date.now()}-${imageFile.name.replace(/\s+/g, "-")}`;
+      productData.imageUrl = await uploadToCloudinary(imageFile, fileName);
     } catch (error) {
-      console.error("S3 Upload Error:", error);
+      console.error("Cloudinary Upload Error:", error);
       return NextResponse.json(
         { error: "Failed to upload image!" },
         { status: 500 }

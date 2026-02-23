@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { uploadToS3 } from "@/lib/s3";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { v4 as uuidv4 } from "uuid";
 import { OrderStatus, PaymentMethod } from "@prisma/client";
 import { stripe } from "@/lib/stripe"; // Assuming you have the Stripe setup in the lib folder
@@ -104,7 +104,7 @@ export async function createOrder(
   let prescriptionImageUrl: string | null = null;
 
   if (prescriptionFile) {
-    prescriptionImageUrl = await uploadToS3(
+    prescriptionImageUrl = await uploadToCloudinary(
       prescriptionFile,
       `prescriptions/${uuidv4()}`
     );

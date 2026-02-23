@@ -3,7 +3,6 @@
 import { prisma } from "@/lib/prisma";
 import { AddressSchema } from "@/schemas";
 import * as z from "zod";
-import { uploadToS3 } from "@/lib/s3";
 import { v4 as uuidv4 } from "uuid";
 import { UserSchema } from "@/schemas";
 

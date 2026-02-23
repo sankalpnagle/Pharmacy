@@ -6,12 +6,12 @@ const nextConfig: NextConfig = {
   // ✅ Required only if you really need it
   trailingSlash: false,
 
-  // ✅ Allow S3 images
+  // ✅ Allow Cloudinary images
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "pharmacy-uploads-123.s3.ap-south-1.amazonaws.com",
+        hostname: "res.cloudinary.com",
         pathname: "/**",
       },
     ],
