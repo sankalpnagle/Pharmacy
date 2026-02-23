@@ -1,49 +1,42 @@
-// lib/ses.ts
-import {
-    SESClient,
-    SendEmailCommand,
-  } from "@aws-sdk/client-ses";
-  
-  const sesClient = new SESClient({
-    region: "us-east-1", // or your SES region
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-    },
-  });
-  
-  export async function sendEmail({
-    to,
-    subject,
-    bodyHtml,
-    bodyText,
-  }: {
-    to: string;
-    subject: string;
-    bodyHtml: string;
-    bodyText?: string;
-  }) {
-    const command = new SendEmailCommand({
-      Destination: {
-        ToAddresses: [to],
-      },
-      Message: {
-        Subject: { Data: subject },
-        Body: {
-          Html: { Data: bodyHtml },
-          ...(bodyText && { Text: { Data: bodyText } }),
-        },
-      },
-      Source: process.env.EMAIL_FROM!,
+// lib/ses.ts - Gmail + Nodemailer (replaces AWS SES)
+import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.GMAIL_USER!,
+    pass: process.env.GMAIL_APP_PASSWORD!,
+  },
+});
+
+export async function sendEmail({
+  to,
+  subject,
+  bodyHtml,
+  bodyText,
+}: {
+  to: string;
+  subject: string;
+  bodyHtml: string;
+  bodyText?: string;
+}) {
+  const from =
+    process.env.GMAIL_USER || process.env.EMAIL_FROM || "noreply@example.com";
+
+  try {
+    const result = await transporter.sendMail({
+      from: `"${process.env.EMAIL_FROM_NAME || "Pharmacy"}" <${from}>`,
+      to,
+      subject,
+      html: bodyHtml,
+      ...(bodyText && { text: bodyText }),
     });
-  
-    try {
-      const response = await sesClient.send(command);
-      console.log("✅ Email sent:", response);
-      return { success: true, data: response };
-    } catch (err) {
-      console.error("❌ Failed to send email:", err);
-      return { success: false, error: err };
-    }
+    console.log("✅ Email sent:", result.messageId);
+    return { success: true, data: result };
+  } catch (err) {
+    console.error("❌ Failed to send email:", err);
+    return { success: false, error: err };
   }
-  
+}
