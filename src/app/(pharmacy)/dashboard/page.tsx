@@ -142,14 +142,41 @@ export default function Dashboard() {
     try {
       setIsLoading(true);
       const res = await getAllOrder();
-      if (res.data?.success && Array.isArray(res.data.data)) {
-        setOrders(res.data.data);
+
+      console.log("fetchAllOrders response:", res);
+
+      // Handle different response formats
+      if (res?.data) {
+        let ordersData = [];
+
+        // Check various possible response structures
+        if (Array.isArray(res.data)) {
+          ordersData = res.data;
+        } else if (Array.isArray(res.data.data)) {
+          ordersData = res.data.data;
+        } else if (res.data.success && Array.isArray(res.data.data)) {
+          ordersData = res.data.data;
+        } else if (res.data.orders) {
+          ordersData = res.data.orders;
+        }
+
+        console.log("Processed orders data:", ordersData);
+
+        if (Array.isArray(ordersData) && ordersData.length > 0) {
+          setOrders(ordersData);
+        } else {
+          console.warn("No orders found in response:", res.data);
+          setOrders([]);
+        }
       } else {
-        console.error("Failed to fetch orders", res);
+        console.error("Unexpected response structure:", res);
         setOrders([]);
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+      }
       setOrders([]);
     } finally {
       setIsLoading(false);
@@ -158,6 +185,37 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchAllOrders();
+
+    // Listen for real-time order updates via socket
+    const socket = getSocket();
+
+    const handleNewOrder = (newOrder: Orders) => {
+      console.log("New order received via socket:", newOrder);
+      setOrders((prevOrders) => {
+        const exists = prevOrders.some((o) => o.id === newOrder.id);
+        if (exists) {
+          return prevOrders.map((o) => (o.id === newOrder.id ? newOrder : o));
+        }
+        return [newOrder, ...prevOrders];
+      });
+    };
+
+    const handleOrderUpdated = (updatedOrder: Orders) => {
+      console.log("Order updated via socket:", updatedOrder);
+      setOrders((prevOrders) =>
+        prevOrders.map((o) => (o.id === updatedOrder.id ? updatedOrder : o)),
+      );
+    };
+
+    socket.on("newOrder", handleNewOrder);
+    socket.on("orderUpdated", handleOrderUpdated);
+    socket.on("payment", handleNewOrder); // Handle payment events as well
+
+    return () => {
+      socket.off("newOrder", handleNewOrder);
+      socket.off("orderUpdated", handleOrderUpdated);
+      socket.off("payment", handleNewOrder);
+    };
   }, []);
 
   const filterData = [
