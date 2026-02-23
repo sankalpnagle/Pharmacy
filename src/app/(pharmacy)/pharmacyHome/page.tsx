@@ -211,13 +211,22 @@ export default function PharmacyHome() {
 
     fetchAllOrders();
 
-    // Only one socket listener: payment
-    const socket = getSocket();
-    socket.on("payment", handlePayment);
+    // Try to connect to socket for real-time updates (best effort, not critical)
+    try {
+      const socket = getSocket();
+      socket.on("payment", handlePayment);
 
-    return () => {
-      socket.off("payment", handlePayment);
-    };
+      return () => {
+        socket.off("payment", handlePayment);
+      };
+    } catch (socketError) {
+      console.warn(
+        "Socket connection failed (this is OK on serverless):",
+        socketError,
+      );
+      // Socket failure is not critical - data already loaded from API
+      return () => {};
+    }
   }, []);
 
   console.log(orders, "orders");
