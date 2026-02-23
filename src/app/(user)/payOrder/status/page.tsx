@@ -13,10 +13,14 @@ export default function PaymentStatusPage() {
   const [showConfetti, setShowConfetti] = useState(false);
 
   // Get parameters from URL
+  // Support both old Stripe params and new custom payment params
   const paymentIntent = searchParams.get("payment_intent");
   const paymentStatus = searchParams.get("redirect_status");
+  const customStatus = searchParams.get("status");
+  const orderCode = searchParams.get("code");
 
-  const isSuccess = paymentStatus === "succeeded";
+  // Check if payment was successful (either Stripe or custom payment)
+  const isSuccess = paymentStatus === "succeeded" || customStatus === "success";
   const message = isSuccess
     ? t("your_order_has_been_paid!")
     : t("there_was_an_issue_processing_your_payment.");
@@ -103,6 +107,13 @@ export default function PaymentStatusPage() {
           <p className="text-sm text-gray-500 mb-4">
             {t("payment_id")}:{" "}
             <span className="font-mono">{paymentIntent}</span>
+          </p>
+        )}
+
+        {orderCode && (
+          <p className="text-sm text-gray-500 mb-4">
+            {t("order_code")}:{" "}
+            <span className="font-mono font-bold">{orderCode}</span>
           </p>
         )}
 

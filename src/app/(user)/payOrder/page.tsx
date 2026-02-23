@@ -3,89 +3,18 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { callCreatePaymentApi } from "@/services/payment";
-import {
-  PaymentElement,
-  Elements,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import { getOrderByCode } from "@/services/order";
 import OrderCode from "@/components/cart/OrderCode";
 import { useLoading } from "@/context/LoadingContext";
-import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { t } from "@/utils/translate";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-);
-
-function CheckoutForm({
-  clientSecret,
-  amount,
-}: {
-  clientSecret: string;
-  amount: number;
-}) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const code = searchParams.get("code") || "";
-  const { data: session } = useSession();
-
-  const handleSubmit = async () => {
-    if (!stripe || !elements) return;
-    setLoading(true);
-    const returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/payOrder/status`;
-
-    try {
-      const result = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: returnUrl,
-        },
-      });
-    } catch (error) {
-      console.error(t("payment_error"), error);
-      alert(t("payment_failed_please_try_again"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg max-w-md w-full">
-        <h2 className="text-xl font-bold mb-4">{t("complete_payment")}</h2>
-        <p className="mb-4">
-          {t("order_amount")}: ${amount}
-        </p>
-        <PaymentElement />
-        <Button
-          onClick={handleSubmit}
-          className="mt-4 text-white w-full"
-          disabled={!stripe || loading}
-        >
-          {loading ? t("processing") : t("pay_now")}
-        </Button>
-      </div>
-    </div>
-  );
-}
 
 const PayOrder = () => {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
-  const [clientSecret, setClientSecret] = useState("");
-  const [amount, setAmount] = useState(0);
   const [products, setProducts] = useState<any>(null);
   const { showLoader, hideLoader } = useLoading();
   const router = useRouter();
-  const { data: session } = useSession();
 
   const fetchOrderData = async () => {
     try {
@@ -107,16 +36,11 @@ const PayOrder = () => {
 
   const handlePayNow = async () => {
     try {
-      showLoader();
-      const { data } = await callCreatePaymentApi({ orderCode: code || "" });
-      setClientSecret(data?.clientSecret);
-      setAmount(data?.amount);
+      // Redirect to the payment page with order code
+      router.push(`/stripe-payment?code=${code}`);
     } catch (error) {
       console.error(t("payment_initialization_error"), error);
-      const message = error?.response?.data?.error;
-      toast.error(message);
-    } finally {
-      hideLoader();
+      toast.error(t("payment_initialization_error"));
     }
   };
 
@@ -144,11 +68,7 @@ const PayOrder = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {clientSecret ? (
-        <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <CheckoutForm clientSecret={clientSecret} amount={amount} />
-        </Elements>
-      ) : code ? (
+      {code ? (
         products ? (
           <div className="flex flex-col md:flex-row gap-8">
             <div className="md:flex-1">
