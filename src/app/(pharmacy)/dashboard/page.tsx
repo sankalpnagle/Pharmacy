@@ -40,7 +40,7 @@ import { Input } from "@/components/ui/input";
 import { DatePickerWithRange } from "@/components/custom_components/date_range_picker";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState, useMemo } from "react";
-import { socket } from "@/lib/socket";
+import { getSocket } from "@/lib/socket";
 import { getAllOrder } from "@/services/order";
 import { formatDate } from "@/utils/formatDate";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -231,7 +231,7 @@ export default function Dashboard() {
     },
     {
       accessorKey: "status",
-      header: () => t("status"), 
+      header: () => t("status"),
       cell: ({ row }) => {
         const currentStatus = row.original?.status;
         return (
@@ -287,7 +287,7 @@ export default function Dashboard() {
           value={
             (table.getColumn("orderNumber")?.getFilterValue() as string)
               ? (table.getColumn("orderNumber")?.getFilterValue() as string)
-              : (table.getColumn("patient")?.getFilterValue() as string) ?? ""
+              : ((table.getColumn("patient")?.getFilterValue() as string) ?? "")
           }
           onChange={(event) => {
             const value = event.target.value;
@@ -384,7 +384,7 @@ export default function Dashboard() {
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                       </TableHead>
                     ))}
@@ -406,7 +406,7 @@ export default function Dashboard() {
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </TableCell>
                       ))}

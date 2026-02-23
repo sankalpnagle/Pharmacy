@@ -33,7 +33,7 @@ import { Input } from "@/components/ui/input";
 import { DatePickerWithRange } from "@/components/custom_components/date_range_picker";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { socket } from "@/lib/socket";
+import { getSocket } from "@/lib/socket";
 import { getAllOrder, getAllPaidOrder } from "@/services/order";
 import { formatDate } from "@/utils/formatDate";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -200,7 +200,7 @@ export default function PharmacyHome() {
         // Create updated array
         let updatedOrders = exists
           ? prevOrders.map((order) =>
-              order.id === newOrder.id ? newOrder : order
+              order.id === newOrder.id ? newOrder : order,
             )
           : [newOrder, ...prevOrders];
 
@@ -212,6 +212,7 @@ export default function PharmacyHome() {
     fetchAllOrders();
 
     // Only one socket listener: payment
+    const socket = getSocket();
     socket.on("payment", handlePayment);
 
     return () => {
@@ -300,7 +301,7 @@ export default function PharmacyHome() {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -322,7 +323,7 @@ export default function PharmacyHome() {
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
