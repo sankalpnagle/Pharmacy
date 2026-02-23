@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
-import Copy from "@/../public/icons/copy.svg";
+import Copy from "public/icons/copy.svg";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { t } from "@/utils/translate";

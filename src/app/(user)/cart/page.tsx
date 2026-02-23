@@ -1,12 +1,12 @@
 "use client";
 import Image from "next/image";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import Minimize from "@/../public/icons/minimize.svg";
-import Maximize from "@/../public/icons/plus_circle.svg";
-import Delete from "@/../public/icons/delete.svg";
-import Location from "@/../public/icons/location.svg";
-import Plane from "@/../public/icons/plane.svg";
-import FileSvg from "@/../public/icons/file.svg";
+import Minimize from "public/icons/minimize.svg";
+import Maximize from "public/icons/plus_circle.svg";
+import Delete from "public/icons/delete.svg";
+import Location from "public/icons/location.svg";
+import Plane from "public/icons/plane.svg";
+import FileSvg from "public/icons/file.svg";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
