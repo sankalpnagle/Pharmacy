@@ -175,13 +175,19 @@ export default function PharmacyHome() {
     },
   });
 
+  // Fetch orders once on mount. Do not include loader functions in deps
+  // to avoid re-running when context functions change.
   useEffect(() => {
+    let mounted = true;
     const fetchAllOrders = async () => {
       try {
+        // showLoader/hideLoader may come from context; call directly
+        // but don't reference them in deps to prevent effect re-run
         showLoader();
         const res = await getAllPaidOrder();
+        if (!mounted) return;
         if (res.statusText === "OK") {
-          setOrders(res.data.data);
+          setOrders(res.data.data || []);
         } else {
           console.error("Failed to fetch orders", res);
         }
@@ -192,29 +198,46 @@ export default function PharmacyHome() {
       }
     };
 
-    // Handles both updating existing orders and adding new ones on payment
-    const handlePayment = (newOrder: Orders) => {
+    fetchAllOrders();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Socket listeners in separate effect so they attach only once
+  useEffect(() => {
+    const handlePayment = (newOrder: Partial<Orders> & { id?: string }) => {
+      if (!newOrder?.id) return;
+
       setOrders((prevOrders) => {
-        const exists = prevOrders.some((order) => order.id === newOrder.id);
+        const idx = prevOrders.findIndex((o) => o.id === newOrder.id);
+        if (idx !== -1) {
+          const existing = prevOrders[idx];
+          // shallow compare small set of fields to avoid unnecessary updates
+          const changed =
+            existing.status !== newOrder.status ||
+            existing.totalPrice !== (newOrder as Orders).totalPrice ||
+            existing.orderNumber !== (newOrder as Orders).orderNumber;
 
-        // Create updated array
-        let updatedOrders = exists
-          ? prevOrders.map((order) =>
-              order.id === newOrder.id ? newOrder : order,
-            )
-          : [newOrder, ...prevOrders];
+          if (!changed) return prevOrders;
 
-        // Sort by order number (descending)
-        return updatedOrders.sort((a, b) => b.id - a.id);
+          const updated = [...prevOrders];
+          updated[idx] = { ...existing, ...(newOrder as Orders) };
+          updated.sort((a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt)));
+          return updated;
+        }
+
+        // New order: prepend and sort
+        const added = [newOrder as Orders, ...prevOrders];
+        added.sort((a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt)));
+        return added;
       });
     };
 
-    fetchAllOrders();
-
-    // Real-time updates via socket
     const handleOrderStatusChange = (data: any) => {
       console.log("📊 Order status changed via socket:", data);
-      handlePayment({ ...data, id: data.orderId, status: data.status });
+      handlePayment({ id: data.orderId, status: data.status });
     };
 
     socket.on("payment", handlePayment);
@@ -224,7 +247,7 @@ export default function PharmacyHome() {
       socket.off("payment", handlePayment);
       socket.off("orderStatusUpdate", handleOrderStatusChange);
     };
-  }, [showLoader, hideLoader]);
+  }, []);
 
   console.log(orders, "orders");
 
