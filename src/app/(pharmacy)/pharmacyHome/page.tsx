@@ -181,8 +181,6 @@ export default function PharmacyHome() {
     let mounted = true;
     const fetchAllOrders = async () => {
       try {
-        // showLoader/hideLoader may come from context; call directly
-        // but don't reference them in deps to prevent effect re-run
         showLoader();
         const res = await getAllPaidOrder();
         if (!mounted) return;
@@ -206,6 +204,7 @@ export default function PharmacyHome() {
   }, []);
 
   // Socket listeners in separate effect so they attach only once
+  /*
   useEffect(() => {
     const handlePayment = (newOrder: Partial<Orders> & { id?: string }) => {
       if (!newOrder?.id) return;
@@ -248,6 +247,7 @@ export default function PharmacyHome() {
       socket.off("orderStatusUpdate", handleOrderStatusChange);
     };
   }, []);
+  */
 
   console.log(orders, "orders");
 
