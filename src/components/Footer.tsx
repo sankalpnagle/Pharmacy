@@ -13,7 +13,7 @@ const Footer = () => {
   return (
     <>
       {shouldShowFooter && (
-        <footer className="bg-primary  rounded-[14px] my-2  text-white ">
+        <footer className="bg-primary min-w-[640px] rounded-[14px] my-2  text-white ">
           <section className="sm:flex sm:justify-between w-11/12 mx-auto pt-8 pb-7">
             <div className="">
               <Image width={170} className="" src={logo} alt="Logo" />

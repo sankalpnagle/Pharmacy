@@ -1,16 +1,11 @@
 "use client";
-import React, { useRef, useState } from "react";
-// Import Swiper React components
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-
 import "./css/style.css";
-
-// import required modules
 import { Pagination, Autoplay } from "swiper/modules";
+import Image from "next/image";
 
 interface SlideImage {
   image: {
@@ -24,46 +19,34 @@ interface HeroSliderProps {
 
 export default function HeroSlider({ data }: HeroSliderProps) {
   return (
-    <div className="relative">
+    <div className="relative w-full overflow-hidden">
       <Swiper
         modules={[Pagination, Autoplay]}
-        spaceBetween={30}
-        centeredSlides={true}
+        centeredSlides
         autoplay={{
-          delay: 3000,
+          delay: 3500,
           disableOnInteraction: false,
         }}
         pagination={{
           clickable: true,
-          dynamicBullets: true,
         }}
-        className="mySwiper"
-        breakpoints={{
-          // when window width is >= 320px
-          320: {
-            slidesPerView: 1,
-            spaceBetween: 20,
-          },
-          // when window width is >= 480px
-          480: {
-            slidesPerView: 1,
-            spaceBetween: 30,
-          },
-          // when window width is >= 640px
-          640: {
-            slidesPerView: 1,
-            spaceBetween: 40,
-          },
-        }}
+        className="heroSwiper"
       >
         {data.map((img, index) => (
           <SwiperSlide key={index}>
-            <div className="relative h-[300px] md:h-[400px] lg:h-[500px] w-full">
-              <img
+            <div className="relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:h-[520px]">
+              
+              {/* IMAGE */}
+              <Image
                 src={img.image.src}
                 alt={`Slide ${index + 1}`}
-                className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                fill
+                priority={index === 0}
+                className="object-cover scale-100 group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
               />
+
+              {/* GRADIENT OVERLAY */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
             </div>
           </SwiperSlide>
         ))}

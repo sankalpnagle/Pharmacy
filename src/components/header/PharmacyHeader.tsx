@@ -40,12 +40,12 @@ const PharmacyHeader = () => {
 
   return (
     <>
-      <nav className="bg-[#10847E] sm:block hidden rounded-[14px] my-2">
+      <nav className="bg-[#10847E] sm:block hidden min-w-[640px] sm:w-full  rounded-[14px] py-2 my-2">
         <div className="flex flex-wrap justify-between relative items-center text-white px-5 mx-auto">
           <Link href={"/"}>
             <Image
-              width={165}
-              className="absolute -top-1.5"
+              // width={140}
+              className="absolute w-32 -top-2"
               src={logo}
               alt={t("logo")}
             />
@@ -61,7 +61,9 @@ const PharmacyHeader = () => {
                     : "hover:text-gray-200"
                 }`}
               >
-                <FaHome className={isActive("/") ? "text-yellow-400" : "text-white"} />
+                <FaHome
+                  className={isActive("/") ? "text-yellow-400" : "text-white"}
+                />
                 <span>{t("home")}</span>
               </Link>
             </li>
@@ -134,9 +136,7 @@ const PharmacyHeader = () => {
                             onClick={handleLogout}
                             className="flex gap-x-1 items-center hover:cursor-pointer"
                           >
-                            <IoChevronForward
-                              className="w-4 mt-0.5 text-[#F62626] rotate-180"
-                            />
+                            <IoChevronForward className="w-4 mt-0.5 text-[#F62626] rotate-180" />
                             <span className="ml-1.5 text-[#F62626] font-medium">
                               {" "}
                               {t("logout")}
@@ -170,8 +170,8 @@ const PharmacyHeader = () => {
         <div className="flex justify-between flex-wrap relative min-w-[320px] items-center text-white px-5 mx-auto">
           <Link href={"/"}>
             <Image
-              width={150}
-              className="absolute sm:hidden block left-1 -top-1"
+              // width={150}
+              className="absolute w-24 sm:hidden block left-1 -top-1"
               src={logo}
               alt={t("logo")}
             />
@@ -220,9 +220,7 @@ const PharmacyHeader = () => {
                             onClick={handleLogout}
                             className="flex gap-x-1 items-center hover:cursor-pointer"
                           >
-                            <IoChevronForward
-                              className="w-4 mt-0.5 text-[#F62626] rotate-180"
-                            />
+                            <IoChevronForward className="w-4 mt-0.5 text-[#F62626] rotate-180" />
                             <span className="ml-1.5 text-[#F62626] font-medium">
                               {" "}
                               {t("logout")}
