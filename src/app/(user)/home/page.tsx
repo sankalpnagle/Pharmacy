@@ -254,9 +254,9 @@ export default function Home() {
         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5"
       >
         {data.map((p) => (
-          <motion.div variants={fadeUp}>
+          <div >
             <ProductCard product={p} />
-          </motion.div>
+          </div>
         ))}
       </motion.div>
 
@@ -286,9 +286,9 @@ export default function Home() {
           className="sm:flex sm:flex-wrap mt-10 justify-center grid grid-cols-2 gap-6"
         >
           {cateData.slice(0, 7).map((item, index) => (
-            <motion.div key={index} variants={fadeUp}>
-              <CategoryCard data={item} id={index} />
-            </motion.div>
+            <div key={index}>
+              <CategoryCard data={item}  />
+            </div>
           ))}
         </motion.div>
       </motion.div>
