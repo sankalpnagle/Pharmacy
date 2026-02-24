@@ -184,8 +184,9 @@ export default function PharmacyHome() {
         showLoader();
         const res = await getAllPaidOrder();
         if (!mounted) return;
-        if (res.statusText === "OK") {
-          setOrders(res.data.data || []);
+        // FIX: Use status === 200 instead of statusText
+        if (res.status === 200 && res.data?.data) {
+          setOrders(res.data.data);
         } else {
           console.error("Failed to fetch orders", res);
         }
