@@ -1,19 +1,42 @@
 "use client";
+
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/redux/slices/cartSlice";
+import toast from "react-hot-toast";   // ✅ ADD
 
 interface ProductCardProps {
   product: any;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const dispatch = useDispatch();
+
   const isOutOfStock = product.availability !== "IN_STOCK";
+
+  const selectedQuantity = 1;
+  const totalWeight = null;
+
+  const handleCart = () => {
+    dispatch(
+      addToCart({
+        ...product,
+        quantity: selectedQuantity,
+        totalWeight: totalWeight ? totalWeight : product?.weight,
+      })
+    );
+
+    toast.success("Product added to cart 🛒");   // ✅ TOAST
+
+    // ❌ REMOVE THIS
+    // router.push("/cart");
+  };
 
   return (
     <Card className="group rounded-2xl overflow-hidden border-none shadow-sm hover:shadow-md transition-all duration-300">
 
-      {/* IMAGE SECTION */}
       <div className="relative w-full h-44 bg-white">
         <Image
           src={product.imageUrl}
@@ -29,26 +52,20 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
 
-      {/* CONTENT SECTION */}
-      <CardContent className="p-4 space-y-2">
-
-        {/* CATEGORY */}
+      <CardContent className="px-4 py-1 space-y-2">
         <p className="text-xs text-muted-foreground">
           {product.category.parent?.name} / {product.category.name}
         </p>
 
-        {/* NAME */}
         <h3 className="font-semibold text-sm line-clamp-2 min-h-[40px]">
           {product.name}
         </h3>
 
-        {/* WEIGHT */}
         <p className="text-xs text-muted-foreground">
           {product.weight} mg
         </p>
 
-        {/* PRICE + BUTTON */}
-        <div className="flex items-center justify-between pt-2">
+        <div className="flex items-center justify-between pt-1">
           <span className="text-lg font-bold text-primary">
             ₹{product.price}
           </span>
@@ -56,12 +73,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Button
             size="sm"
             disabled={isOutOfStock}
-            className="rounded-lg"
+            className="rounded-lg text-white"
+            onClick={handleCart}
           >
             {isOutOfStock ? "Out" : "Add"}
           </Button>
         </div>
-
       </CardContent>
     </Card>
   );

@@ -25,6 +25,8 @@ import GlobalAuthModal from "../auth/GlobalAuthModal";
 import toast from "react-hot-toast";
 import logo from "@/../public/logo/logo-2.png";
 import { t } from "@/utils/translate";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const UserHeader = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -33,6 +35,10 @@ const UserHeader = () => {
   const { activeModal, openModal, closeModal } = useModal();
   const session = useSession();
   const router = useRouter();
+
+  const productQuantity = useSelector(
+    (state: RootState) => state.cart.productQuantity,
+  );
 
   const handleLogout = () => {
     signOut({ callbackUrl: process.env.NEXT_PUBLIC_BASE_URL });
@@ -108,9 +114,9 @@ const UserHeader = () => {
             <li>
               <Link
                 href="/cart"
-                className={`flex items-center gap-2 px-2 h-10  rounded-lg ${
+                className={`relative flex items-center gap-2 px-2 h-10 rounded-lg ${
                   isActive("/cart")
-                    ? " bg-white text-[#10847E]"
+                    ? "bg-white text-[#10847E]"
                     : "hover:text-gray-200"
                 }`}
               >
@@ -119,6 +125,14 @@ const UserHeader = () => {
                     isActive("/cart") ? "text-yellow-400" : "text-white"
                   }
                 />
+
+                {/* ✅ LIVE BADGE */}
+                {productQuantity > 0 && (
+                  <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs min-w-[18px] h-[18px] flex items-center justify-center rounded-full px-1">
+                    {productQuantity}
+                  </span>
+                )}
+
                 <span>{t("cart")}</span>
               </Link>
             </li>
